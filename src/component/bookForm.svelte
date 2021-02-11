@@ -5,7 +5,8 @@ import "@polymer/paper-card";
 import "@material/mwc-button";
 import "@material/mwc-icon-button";
 import "@material/mwc-top-app-bar";
-let book;
+//export let id;
+export let book;
 
 $: if(book){
     console.log(book)

@@ -1,10 +1,16 @@
 <script>
     import { Router, Link, Route } from "svelte-routing";
-    import DB from "../DB.svelte";
     import "@polymer/paper-card";
     import Header from "../component/header.svelte"
-    let books = [];
+    export let books = [];
+    export let idBook = null
     let pageTitle = "BookAPP - Accueil";
+
+    $: if(books){
+      console.log(books)
+    }
+
+  
 </script>
 
 <style>
@@ -26,7 +32,6 @@
 </style>
 
 <Header title={pageTitle} ></Header>
-<DB bind:documents={books} initsrc="./books.json" collection="books"/>
 {#each books as book}
     <paper-card heading={book.title}>
     <div class="card-info">
@@ -38,8 +43,8 @@
         </div>
         <div class="card-action">
           <nav>
-            <Link to="delete"><mwc-icon-button icon="delete"></mwc-icon-button></Link>
-            <Link to="edit"><mwc-icon-button icon="edit"></mwc-icon-button></Link>
+            <Link to="delete/{book._id}"><mwc-icon-button icon="delete"></mwc-icon-button></Link>
+            <Link to="edit/"><mwc-icon-button icon="edit" onclick="{() => {idBook = book._id}}"></mwc-icon-button></Link>
           </nav>
         </div>
     </div>

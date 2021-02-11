@@ -5,11 +5,12 @@
  export let initsrc;
  export let collection;
  let db;
- export let suppression = false
 
 // Si db n'est plus 'undefined' alors
 // on appelle load_books automatiquement
  $: if (db) { load_books(); }
+
+
  
  onMount(
    async () => {
@@ -32,5 +33,14 @@
      console.log(zdocs);
      // on charge les données dans documents
    documents = zdocs.rows.map(d => d.doc);
+ }
+
+ export async function load_book(id) {
+    if(!db){
+      console.log('no bdd')
+     return
+    }   
+    const dbData = await db.get(id)
+    console.log(dbData)
  }
 </script>
