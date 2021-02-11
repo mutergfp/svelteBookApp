@@ -23,7 +23,7 @@
     <div>
       <!-- <Route path="edit" component="{Edit}" /> -->
       <Route path="add" component="{Delete}" />
-      <Route path="delete/:id" component="{Delete}" />
+      <Route path="delete"><Delete {db} {idBook} /></Route>
       <Route path="edit"><Edit {db} {idBook}/></Route>
       <Route path="/"><Home {books} bind:idBook={idBook}/></Route>
     </div>

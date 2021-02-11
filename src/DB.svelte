@@ -43,4 +43,14 @@
     const dbData = await db.get(id)
     return dbData
  }
+
+ export async function delete_book(id){
+   if(!db){
+     console.log('no bdd')
+     return
+   }
+   db.get(id).then(function (doc) {
+    return db.remove(doc);
+  });
+ }
 </script>
