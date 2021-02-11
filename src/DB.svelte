@@ -41,6 +41,6 @@
      return
     }   
     const dbData = await db.get(id)
-    console.log(dbData)
+    return dbData
  }
 </script>

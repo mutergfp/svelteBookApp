@@ -1,9 +1,8 @@
 <script>
     import Header from "../component/header.svelte"
     import BookForm from "../component/bookForm.svelte"
-    import DB from "../DB.svelte"
     let pageTitle = "BookAPP - Modification"
-    let book
+    let book = {}
     export let db = null
     export let idBook = null
 
@@ -12,12 +11,19 @@
     }
 
     $: if(db){
-        console.log(db)
+        if(idBook){
+           load()
+        }
+    }
+
+    async function load(){
+        book = await db.load_book(idBook)
+        console.log(book)
     }
 </script>
 
 <Header title={pageTitle} ></Header>
-{idBook}
+
 
 
 

@@ -18603,7 +18603,7 @@ var app = (function () {
     		}
 
     		const dbData = await db.get(id);
-    		console.log(dbData);
+    		return dbData;
     	}
 
     	const writable_props = ["documents", "initsrc", "collection"];
@@ -36196,33 +36196,25 @@ var app = (function () {
 
     function create_fragment$8(ctx) {
     	let header;
-    	let t0;
-    	let t1;
     	let current;
 
     	header = new Header({
-    			props: { title: /*pageTitle*/ ctx[1] },
+    			props: { title: /*pageTitle*/ ctx[0] },
     			$$inline: true
     		});
 
     	const block = {
     		c: function create() {
     			create_component(header.$$.fragment);
-    			t0 = space();
-    			t1 = text(/*idBook*/ ctx[0]);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			mount_component(header, target, anchor);
-    			insert_dev(target, t0, anchor);
-    			insert_dev(target, t1, anchor);
     			current = true;
     		},
-    		p: function update(ctx, [dirty]) {
-    			if (!current || dirty & /*idBook*/ 1) set_data_dev(t1, /*idBook*/ ctx[0]);
-    		},
+    		p: noop,
     		i: function intro(local) {
     			if (current) return;
     			transition_in(header.$$.fragment, local);
@@ -36234,8 +36226,6 @@ var app = (function () {
     		},
     		d: function destroy(detaching) {
     			destroy_component(header, detaching);
-    			if (detaching) detach_dev(t0);
-    			if (detaching) detach_dev(t1);
     		}
     	};
 
@@ -36254,9 +36244,15 @@ var app = (function () {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Edit", slots, []);
     	let pageTitle = "BookAPP - Modification";
-    	let book;
+    	let book = {};
     	let { db = null } = $$props;
     	let { idBook = null } = $$props;
+
+    	async function load() {
+    		book = await db.load_book(idBook);
+    		console.log(book);
+    	}
+
     	const writable_props = ["db", "idBook"];
 
     	Object.keys($$props).forEach(key => {
@@ -36264,25 +36260,25 @@ var app = (function () {
     	});
 
     	$$self.$$set = $$props => {
-    		if ("db" in $$props) $$invalidate(2, db = $$props.db);
-    		if ("idBook" in $$props) $$invalidate(0, idBook = $$props.idBook);
+    		if ("db" in $$props) $$invalidate(1, db = $$props.db);
+    		if ("idBook" in $$props) $$invalidate(2, idBook = $$props.idBook);
     	};
 
     	$$self.$capture_state = () => ({
     		Header,
     		BookForm,
-    		DB,
     		pageTitle,
     		book,
     		db,
-    		idBook
+    		idBook,
+    		load
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ("pageTitle" in $$props) $$invalidate(1, pageTitle = $$props.pageTitle);
+    		if ("pageTitle" in $$props) $$invalidate(0, pageTitle = $$props.pageTitle);
     		if ("book" in $$props) book = $$props.book;
-    		if ("db" in $$props) $$invalidate(2, db = $$props.db);
-    		if ("idBook" in $$props) $$invalidate(0, idBook = $$props.idBook);
+    		if ("db" in $$props) $$invalidate(1, db = $$props.db);
+    		if ("idBook" in $$props) $$invalidate(2, idBook = $$props.idBook);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -36290,26 +36286,28 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*idBook*/ 1) {
+    		if ($$self.$$.dirty & /*idBook*/ 4) {
     			 if (idBook) {
     				console.log(idBook);
     			}
     		}
 
-    		if ($$self.$$.dirty & /*db*/ 4) {
+    		if ($$self.$$.dirty & /*db, idBook*/ 6) {
     			 if (db) {
-    				console.log(db);
+    				if (idBook) {
+    					load();
+    				}
     			}
     		}
     	};
 
-    	return [idBook, pageTitle, db];
+    	return [pageTitle, db, idBook];
     }
 
     class Edit extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$8, create_fragment$8, safe_not_equal, { db: 2, idBook: 0 });
+    		init(this, options, instance$8, create_fragment$8, safe_not_equal, { db: 1, idBook: 2 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
