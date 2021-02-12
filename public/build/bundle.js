@@ -18572,7 +18572,7 @@ var app = (function () {
     	onMount(async () => {
     		const pdb = new PouchDB(collection);
     		await pdb.info(); // Notre BD est disponible
-    		$$invalidate(4, db = pdb); // db devient non nulle et donc déclenche load_books
+    		$$invalidate(6, db = pdb); // db devient non nulle et donc déclenche load_books
     	});
 
     	async function load_books() {
@@ -18606,6 +18606,32 @@ var app = (function () {
     		return dbData;
     	}
 
+    	async function edit(book) {
+    		if (!db) {
+    			console.log("no bdd");
+    			return;
+    		}
+
+    		await db.put(book).then(function (response) {
+    			console.log("response", response);
+    		}).catch(function (error) {
+    			console.log("err", err);
+    		});
+    	}
+
+    	async function add(book) {
+    		if (!db) {
+    			console.log("no bdd");
+    			return;
+    		}
+
+    		db.post(book).then(function (response) {
+    			console.log("response", response);
+    		}).catch(function (error) {
+    			console.log("err", err);
+    		});
+    	}
+
     	const writable_props = ["documents", "initsrc", "collection"];
 
     	Object.keys($$props).forEach(key => {
@@ -18626,14 +18652,16 @@ var app = (function () {
     		collection,
     		db,
     		load_books,
-    		load_book
+    		load_book,
+    		edit,
+    		add
     	});
 
     	$$self.$inject_state = $$props => {
     		if ("documents" in $$props) $$invalidate(0, documents = $$props.documents);
     		if ("initsrc" in $$props) $$invalidate(1, initsrc = $$props.initsrc);
     		if ("collection" in $$props) $$invalidate(2, collection = $$props.collection);
-    		if ("db" in $$props) $$invalidate(4, db = $$props.db);
+    		if ("db" in $$props) $$invalidate(6, db = $$props.db);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -18641,7 +18669,7 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*db*/ 16) {
+    		if ($$self.$$.dirty & /*db*/ 64) {
     			// Si db n'est plus 'undefined' alors
     			// on appelle load_books automatiquement
     			 if (db) {
@@ -18650,7 +18678,7 @@ var app = (function () {
     		}
     	};
 
-    	return [documents, initsrc, collection, load_book, db];
+    	return [documents, initsrc, collection, load_book, edit, add, db];
     }
 
     class DB extends SvelteComponentDev {
@@ -18661,7 +18689,9 @@ var app = (function () {
     			documents: 0,
     			initsrc: 1,
     			collection: 2,
-    			load_book: 3
+    			load_book: 3,
+    			edit: 4,
+    			add: 5
     		});
 
     		dispatch_dev("SvelteRegisterComponent", {
@@ -18716,6 +18746,22 @@ var app = (function () {
     	}
 
     	set load_book(value) {
+    		throw new Error("<DB>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get edit() {
+    		return this.$$.ctx[4];
+    	}
+
+    	set edit(value) {
+    		throw new Error("<DB>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get add() {
+    		return this.$$.ctx[5];
+    	}
+
+    	set add(value) {
     		throw new Error("<DB>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -35313,6 +35359,8 @@ var app = (function () {
     	let mwc_icon_button1;
     	let t3;
     	let div1;
+    	let mounted;
+    	let dispose;
 
     	const block = {
     		c: function create() {
@@ -35327,14 +35375,13 @@ var app = (function () {
     			div1 = element("div");
     			set_custom_element_data(mwc_icon_button0, "icon", "menu");
     			set_custom_element_data(mwc_icon_button0, "slot", "navigationIcon");
-    			add_location(mwc_icon_button0, file$1, 8, 4, 184);
+    			add_location(mwc_icon_button0, file$1, 13, 4, 288);
     			attr_dev(div0, "slot", "title");
-    			add_location(div0, file$1, 9, 4, 258);
+    			add_location(div0, file$1, 14, 4, 362);
     			set_custom_element_data(mwc_icon_button1, "icon", "add");
-    			set_custom_element_data(mwc_icon_button1, "slot", "actionItems");
-    			add_location(mwc_icon_button1, file$1, 10, 4, 294);
-    			add_location(div1, file$1, 11, 4, 364);
-    			add_location(mwc_top_app_bar, file$1, 7, 0, 162);
+    			add_location(mwc_icon_button1, file$1, 15, 4, 398);
+    			add_location(div1, file$1, 16, 4, 464);
+    			add_location(mwc_top_app_bar, file$1, 12, 0, 266);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -35349,6 +35396,11 @@ var app = (function () {
     			append_dev(mwc_top_app_bar, mwc_icon_button1);
     			append_dev(mwc_top_app_bar, t3);
     			append_dev(mwc_top_app_bar, div1);
+
+    			if (!mounted) {
+    				dispose = listen_dev(mwc_icon_button1, "click", /*add*/ ctx[1], false, false, false);
+    				mounted = true;
+    			}
     		},
     		p: function update(ctx, [dirty]) {
     			if (dirty & /*title*/ 1) set_data_dev(t1, /*title*/ ctx[0]);
@@ -35357,6 +35409,8 @@ var app = (function () {
     		o: noop,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(mwc_top_app_bar);
+    			mounted = false;
+    			dispose();
     		}
     	};
 
@@ -35375,6 +35429,11 @@ var app = (function () {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("Header", slots, []);
     	let { title = "" } = $$props;
+
+    	function add() {
+    		navigate("add");
+    	}
+
     	const writable_props = ["title"];
 
     	Object.keys($$props).forEach(key => {
@@ -35385,7 +35444,7 @@ var app = (function () {
     		if ("title" in $$props) $$invalidate(0, title = $$props.title);
     	};
 
-    	$$self.$capture_state = () => ({ title });
+    	$$self.$capture_state = () => ({ Link, navigate, title, add });
 
     	$$self.$inject_state = $$props => {
     		if ("title" in $$props) $$invalidate(0, title = $$props.title);
@@ -35395,7 +35454,7 @@ var app = (function () {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [title];
+    	return [title, add];
     }
 
     class Header extends SvelteComponentDev {
@@ -35440,7 +35499,7 @@ var app = (function () {
     			mwc_icon_button = element("mwc-icon-button");
     			set_custom_element_data(mwc_icon_button, "icon", "delete");
     			set_custom_element_data(mwc_icon_button, "class", "svelte-16zk576");
-    			add_location(mwc_icon_button, file$2, 45, 41, 1059);
+    			add_location(mwc_icon_button, file$2, 45, 41, 1044);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, mwc_icon_button, anchor);
@@ -35476,7 +35535,7 @@ var app = (function () {
     			set_custom_element_data(mwc_icon_button, "icon", "edit");
     			set_custom_element_data(mwc_icon_button, "onclick", mwc_icon_button_onclick_value = func);
     			set_custom_element_data(mwc_icon_button, "class", "svelte-16zk576");
-    			add_location(mwc_icon_button, file$2, 46, 29, 1145);
+    			add_location(mwc_icon_button, file$2, 46, 29, 1130);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, mwc_icon_button, anchor);
@@ -35571,18 +35630,18 @@ var app = (function () {
     			if (img.src !== (img_src_value = "data:image/jpeg;base64, " + /*book*/ ctx[4].img.data)) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", img_alt_value = /*book*/ ctx[4].title);
     			attr_dev(img, "title", img_title_value = /*book*/ ctx[4].title);
-    			add_location(img, file$2, 38, 12, 742);
+    			add_location(img, file$2, 38, 12, 727);
     			attr_dev(div0, "class", "card-content");
-    			add_location(div0, file$2, 39, 12, 847);
-    			add_location(div1, file$2, 37, 8, 724);
-    			add_location(nav, file$2, 44, 10, 1012);
+    			add_location(div0, file$2, 39, 12, 832);
+    			add_location(div1, file$2, 37, 8, 709);
+    			add_location(nav, file$2, 44, 10, 997);
     			attr_dev(div2, "class", "card-action");
-    			add_location(div2, file$2, 43, 8, 976);
+    			add_location(div2, file$2, 43, 8, 961);
     			attr_dev(div3, "class", "card-info svelte-16zk576");
-    			add_location(div3, file$2, 36, 4, 692);
+    			add_location(div3, file$2, 36, 4, 677);
     			set_custom_element_data(paper_card, "heading", paper_card_heading_value = /*book*/ ctx[4].title);
     			set_custom_element_data(paper_card, "class", "svelte-16zk576");
-    			add_location(paper_card, file$2, 35, 4, 654);
+    			add_location(paper_card, file$2, 35, 4, 639);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, paper_card, anchor);
@@ -35805,15 +35864,7 @@ var app = (function () {
     		if ("idBook" in $$props) $$invalidate(0, idBook = $$props.idBook);
     	};
 
-    	$$self.$capture_state = () => ({
-    		Router,
-    		Link,
-    		Route,
-    		Header,
-    		books,
-    		idBook,
-    		pageTitle
-    	});
+    	$$self.$capture_state = () => ({ Link, Header, books, idBook, pageTitle });
 
     	$$self.$inject_state = $$props => {
     		if ("books" in $$props) $$invalidate(1, books = $$props.books);
@@ -35951,6 +36002,95 @@ var app = (function () {
     	}
     }
 
+    // Copyright Joyent, Inc. and other Node contributors.
+    //
+    // Permission is hereby granted, free of charge, to any person obtaining a
+    // copy of this software and associated documentation files (the
+    // "Software"), to deal in the Software without restriction, including
+    // without limitation the rights to use, copy, modify, merge, publish,
+    // distribute, sublicense, and/or sell copies of the Software, and to permit
+    // persons to whom the Software is furnished to do so, subject to the
+    // following conditions:
+    //
+    // The above copyright notice and this permission notice shall be included
+    // in all copies or substantial portions of the Software.
+    //
+    // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+    // OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+    // NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+    // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+    // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+    // USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+    // resolves . and .. elements in a path array with directory names there
+    // must be no slashes, empty elements, or device names (c:\) in the array
+    // (so also no leading and trailing slashes - it does not distinguish
+    // relative and absolute paths)
+    function normalizeArray(parts, allowAboveRoot) {
+      // if the path tries to go above the root, `up` ends up > 0
+      var up = 0;
+      for (var i = parts.length - 1; i >= 0; i--) {
+        var last = parts[i];
+        if (last === '.') {
+          parts.splice(i, 1);
+        } else if (last === '..') {
+          parts.splice(i, 1);
+          up++;
+        } else if (up) {
+          parts.splice(i, 1);
+          up--;
+        }
+      }
+
+      // if the path is allowed to go above the root, restore leading ..s
+      if (allowAboveRoot) {
+        for (; up--; up) {
+          parts.unshift('..');
+        }
+      }
+
+      return parts;
+    }
+
+    // path.resolve([from ...], to)
+    // posix version
+    function resolve$2() {
+      var resolvedPath = '',
+          resolvedAbsolute = false;
+
+      for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
+        var path = (i >= 0) ? arguments[i] : '/';
+
+        // Skip empty and invalid entries
+        if (typeof path !== 'string') {
+          throw new TypeError('Arguments to path.resolve must be strings');
+        } else if (!path) {
+          continue;
+        }
+
+        resolvedPath = path + '/' + resolvedPath;
+        resolvedAbsolute = path.charAt(0) === '/';
+      }
+
+      // At this point the path should be resolved to a full absolute path, but
+      // handle relative paths to be safe (might happen when process.cwd() fails)
+
+      // Normalize the path
+      resolvedPath = normalizeArray(filter$1(resolvedPath.split('/'), function(p) {
+        return !!p;
+      }), !resolvedAbsolute).join('/');
+
+      return ((resolvedAbsolute ? '/' : '') + resolvedPath) || '.';
+    }function filter$1 (xs, f) {
+        if (xs.filter) return xs.filter(f);
+        var res = [];
+        for (var i = 0; i < xs.length; i++) {
+            if (f(xs[i], i, xs)) res.push(xs[i]);
+        }
+        return res;
+    }
+
     /* src/component/bookForm.svelte generated by Svelte v3.32.0 */
 
     const { console: console_1$2 } = globals;
@@ -35969,6 +36109,8 @@ var app = (function () {
     	let input3;
     	let t4;
     	let input4;
+    	let t5;
+    	let button;
     	let mounted;
     	let dispose;
 
@@ -35986,22 +36128,26 @@ var app = (function () {
     			input3 = element("input");
     			t4 = space();
     			input4 = element("input");
+    			t5 = space();
+    			button = element("button");
     			attr_dev(link, "href", "https://fonts.googleapis.com/icon?family=Material+Icons");
     			attr_dev(link, "rel", "stylesheet");
-    			add_location(link, file$3, 43, 0, 784);
+    			add_location(link, file$3, 65, 0, 1343);
     			attr_dev(input0, "placeholder", "Titre");
-    			add_location(input0, file$3, 46, 4, 883);
+    			add_location(input0, file$3, 68, 4, 1442);
     			attr_dev(input1, "placeholder", "Auteur");
-    			add_location(input1, file$3, 47, 4, 941);
+    			add_location(input1, file$3, 69, 4, 1500);
     			attr_dev(input2, "placeholder", "Prix du livre");
-    			add_location(input2, file$3, 48, 4, 1001);
+    			add_location(input2, file$3, 70, 4, 1560);
     			attr_dev(input3, "placeholder", "URL Amazon du livre");
-    			add_location(input3, file$3, 49, 4, 1067);
+    			add_location(input3, file$3, 71, 4, 1626);
     			attr_dev(input4, "accept", "image/png, image/jpeg");
     			attr_dev(input4, "type", "file");
     			attr_dev(input4, "placeholder", "Prix du livre");
-    			add_location(input4, file$3, 50, 4, 1137);
-    			add_location(form, file$3, 45, 0, 872);
+    			add_location(input4, file$3, 72, 4, 1696);
+    			attr_dev(button, "type", "button");
+    			add_location(button, file$3, 73, 4, 1792);
+    			add_location(form, file$3, 67, 0, 1431);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -36023,14 +36169,17 @@ var app = (function () {
     			set_input_value(input3, /*book*/ ctx[0].url);
     			append_dev(form, t4);
     			append_dev(form, input4);
+    			append_dev(form, t5);
+    			append_dev(form, button);
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(input0, "input", /*input0_input_handler*/ ctx[1]),
-    					listen_dev(input1, "input", /*input1_input_handler*/ ctx[2]),
-    					listen_dev(input2, "input", /*input2_input_handler*/ ctx[3]),
-    					listen_dev(input3, "input", /*input3_input_handler*/ ctx[4]),
-    					listen_dev(input4, "change", /*input4_change_handler*/ ctx[5])
+    					listen_dev(input0, "input", /*input0_input_handler*/ ctx[4]),
+    					listen_dev(input1, "input", /*input1_input_handler*/ ctx[5]),
+    					listen_dev(input2, "input", /*input2_input_handler*/ ctx[6]),
+    					listen_dev(input3, "input", /*input3_input_handler*/ ctx[7]),
+    					listen_dev(input4, "change", /*input4_change_handler*/ ctx[8]),
+    					listen_dev(button, "click", /*saveData*/ ctx[2], false, false, false)
     				];
 
     				mounted = true;
@@ -36079,26 +36228,53 @@ var app = (function () {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("BookForm", slots, []);
     	let { book } = $$props;
+    	let { db } = $$props;
+    	let files;
 
     	onMount(() => {
     		if (!book) {
     			$$invalidate(0, book = {
     				"author": "",
     				"url": "",
-    				"_id": "",
     				"price": "",
     				"title": "",
-    				"img": {
-    					"content_type": "",
-    					"filename": "",
-    					"data": "",
-    					"path": ""
-    				}
+    				"img": {}
     			});
     		}
     	});
 
-    	const writable_props = ["book"];
+    	async function saveData() {
+    		if (book.img != {}) {
+    			$$invalidate(0, book.img.content_type = files[0].type, book);
+    			$$invalidate(0, book.img.filename = files[0].name, book);
+    			$$invalidate(0, book.img.path = "images/" + files[0].name, book);
+    			await dataImage();
+
+    			if (book._id) {
+    				db.edit(book);
+    			} else {
+    				db.add(book);
+    			}
+
+    			navigate("/");
+    		}
+    	}
+
+    	async function dataImage() {
+    		return new Promise((resolve, reject) => {
+    				let reader = new FileReader();
+
+    				reader.addEventListener("load", async function () {
+    					console.log("loading image");
+    					$$invalidate(0, book.img.data = reader.result.split(",")[1], book);
+    					return resolve(book.img.data);
+    				});
+
+    				reader.readAsDataURL(files[0]);
+    			});
+    	}
+
+    	const writable_props = ["book", "db"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$2.warn(`<BookForm> was created with unknown prop '${key}'`);
@@ -36125,18 +36301,30 @@ var app = (function () {
     	}
 
     	function input4_change_handler() {
-    		book.img = this.value;
-    		$$invalidate(0, book);
+    		files = this.files;
+    		$$invalidate(1, files);
     	}
 
     	$$self.$$set = $$props => {
     		if ("book" in $$props) $$invalidate(0, book = $$props.book);
+    		if ("db" in $$props) $$invalidate(3, db = $$props.db);
     	};
 
-    	$$self.$capture_state = () => ({ DB, onMount, book });
+    	$$self.$capture_state = () => ({
+    		onMount,
+    		navigate,
+    		resolve: resolve$2,
+    		book,
+    		db,
+    		files,
+    		saveData,
+    		dataImage
+    	});
 
     	$$self.$inject_state = $$props => {
     		if ("book" in $$props) $$invalidate(0, book = $$props.book);
+    		if ("db" in $$props) $$invalidate(3, db = $$props.db);
+    		if ("files" in $$props) $$invalidate(1, files = $$props.files);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -36146,13 +36334,16 @@ var app = (function () {
     	$$self.$$.update = () => {
     		if ($$self.$$.dirty & /*book*/ 1) {
     			 if (book) {
-    				console.log(book);
+    				console.log("book", book);
     			}
     		}
     	};
 
     	return [
     		book,
+    		files,
+    		saveData,
+    		db,
     		input0_input_handler,
     		input1_input_handler,
     		input2_input_handler,
@@ -36164,7 +36355,7 @@ var app = (function () {
     class BookForm extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$7, create_fragment$7, safe_not_equal, { book: 0 });
+    		init(this, options, instance$7, create_fragment$7, safe_not_equal, { book: 0, db: 3 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -36179,6 +36370,10 @@ var app = (function () {
     		if (/*book*/ ctx[0] === undefined && !("book" in props)) {
     			console_1$2.warn("<BookForm> was created without expected prop 'book'");
     		}
+
+    		if (/*db*/ ctx[3] === undefined && !("db" in props)) {
+    			console_1$2.warn("<BookForm> was created without expected prop 'db'");
+    		}
     	}
 
     	get book() {
@@ -36188,44 +36383,137 @@ var app = (function () {
     	set book(value) {
     		throw new Error("<BookForm>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
+
+    	get db() {
+    		throw new Error("<BookForm>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set db(value) {
+    		throw new Error("<BookForm>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
     }
 
     /* src/routes/Edit.svelte generated by Svelte v3.32.0 */
 
-    const { console: console_1$3 } = globals;
-
-    function create_fragment$8(ctx) {
-    	let header;
+    // (21:0) {#if book != {}}
+    function create_if_block$1(ctx) {
+    	let bookform;
     	let current;
 
-    	header = new Header({
-    			props: { title: /*pageTitle*/ ctx[0] },
+    	bookform = new BookForm({
+    			props: { book: /*book*/ ctx[1], db: /*db*/ ctx[0] },
     			$$inline: true
     		});
 
     	const block = {
     		c: function create() {
+    			create_component(bookform.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(bookform, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const bookform_changes = {};
+    			if (dirty & /*book*/ 2) bookform_changes.book = /*book*/ ctx[1];
+    			if (dirty & /*db*/ 1) bookform_changes.db = /*db*/ ctx[0];
+    			bookform.$set(bookform_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(bookform.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(bookform.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(bookform, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$1.name,
+    		type: "if",
+    		source: "(21:0) {#if book != {}}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$8(ctx) {
+    	let header;
+    	let t;
+    	let if_block_anchor;
+    	let current;
+
+    	header = new Header({
+    			props: { title: /*pageTitle*/ ctx[2] },
+    			$$inline: true
+    		});
+
+    	let if_block = /*book*/ ctx[1] != {} && create_if_block$1(ctx);
+
+    	const block = {
+    		c: function create() {
     			create_component(header.$$.fragment);
+    			t = space();
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			mount_component(header, target, anchor);
+    			insert_dev(target, t, anchor);
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
     			current = true;
     		},
-    		p: noop,
+    		p: function update(ctx, [dirty]) {
+    			if (/*book*/ ctx[1] != {}) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+
+    					if (dirty & /*book*/ 2) {
+    						transition_in(if_block, 1);
+    					}
+    				} else {
+    					if_block = create_if_block$1(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				group_outros();
+
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
+    			}
+    		},
     		i: function intro(local) {
     			if (current) return;
     			transition_in(header.$$.fragment, local);
+    			transition_in(if_block);
     			current = true;
     		},
     		o: function outro(local) {
     			transition_out(header.$$.fragment, local);
+    			transition_out(if_block);
     			current = false;
     		},
     		d: function destroy(detaching) {
     			destroy_component(header, detaching);
+    			if (detaching) detach_dev(t);
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
     		}
     	};
 
@@ -36249,19 +36537,18 @@ var app = (function () {
     	let { idBook = null } = $$props;
 
     	async function load() {
-    		book = await db.load_book(idBook);
-    		console.log(book);
+    		$$invalidate(1, book = await db.load_book(idBook));
     	}
 
     	const writable_props = ["db", "idBook"];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$3.warn(`<Edit> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Edit> was created with unknown prop '${key}'`);
     	});
 
     	$$self.$$set = $$props => {
-    		if ("db" in $$props) $$invalidate(1, db = $$props.db);
-    		if ("idBook" in $$props) $$invalidate(2, idBook = $$props.idBook);
+    		if ("db" in $$props) $$invalidate(0, db = $$props.db);
+    		if ("idBook" in $$props) $$invalidate(3, idBook = $$props.idBook);
     	};
 
     	$$self.$capture_state = () => ({
@@ -36275,10 +36562,10 @@ var app = (function () {
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ("pageTitle" in $$props) $$invalidate(0, pageTitle = $$props.pageTitle);
-    		if ("book" in $$props) book = $$props.book;
-    		if ("db" in $$props) $$invalidate(1, db = $$props.db);
-    		if ("idBook" in $$props) $$invalidate(2, idBook = $$props.idBook);
+    		if ("pageTitle" in $$props) $$invalidate(2, pageTitle = $$props.pageTitle);
+    		if ("book" in $$props) $$invalidate(1, book = $$props.book);
+    		if ("db" in $$props) $$invalidate(0, db = $$props.db);
+    		if ("idBook" in $$props) $$invalidate(3, idBook = $$props.idBook);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -36286,13 +36573,7 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*idBook*/ 4) {
-    			 if (idBook) {
-    				console.log(idBook);
-    			}
-    		}
-
-    		if ($$self.$$.dirty & /*db, idBook*/ 6) {
+    		if ($$self.$$.dirty & /*db, idBook*/ 9) {
     			 if (db) {
     				if (idBook) {
     					load();
@@ -36301,13 +36582,13 @@ var app = (function () {
     		}
     	};
 
-    	return [pageTitle, db, idBook];
+    	return [db, book, pageTitle, idBook];
     }
 
     class Edit extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$8, create_fragment$8, safe_not_equal, { db: 1, idBook: 2 });
+    		init(this, options, instance$8, create_fragment$8, safe_not_equal, { db: 0, idBook: 3 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -36334,10 +36615,183 @@ var app = (function () {
     	}
     }
 
+    /* src/routes/Add.svelte generated by Svelte v3.32.0 */
+
+    function create_fragment$9(ctx) {
+    	let header;
+    	let t;
+    	let bookform;
+    	let current;
+
+    	header = new Header({
+    			props: { title: /*pageTitle*/ ctx[1] },
+    			$$inline: true
+    		});
+
+    	bookform = new BookForm({
+    			props: { db: /*db*/ ctx[0] },
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(header.$$.fragment);
+    			t = space();
+    			create_component(bookform.$$.fragment);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(header, target, anchor);
+    			insert_dev(target, t, anchor);
+    			mount_component(bookform, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			const bookform_changes = {};
+    			if (dirty & /*db*/ 1) bookform_changes.db = /*db*/ ctx[0];
+    			bookform.$set(bookform_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(header.$$.fragment, local);
+    			transition_in(bookform.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(header.$$.fragment, local);
+    			transition_out(bookform.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(header, detaching);
+    			if (detaching) detach_dev(t);
+    			destroy_component(bookform, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$9.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$9($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots("Add", slots, []);
+    	let pageTitle = "BookAPP - Ajout";
+    	let { db } = $$props;
+    	const writable_props = ["db"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Add> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ("db" in $$props) $$invalidate(0, db = $$props.db);
+    	};
+
+    	$$self.$capture_state = () => ({ Header, BookForm, pageTitle, db });
+
+    	$$self.$inject_state = $$props => {
+    		if ("pageTitle" in $$props) $$invalidate(1, pageTitle = $$props.pageTitle);
+    		if ("db" in $$props) $$invalidate(0, db = $$props.db);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [db, pageTitle];
+    }
+
+    class Add extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$9, create_fragment$9, safe_not_equal, { db: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Add",
+    			options,
+    			id: create_fragment$9.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*db*/ ctx[0] === undefined && !("db" in props)) {
+    			console.warn("<Add> was created without expected prop 'db'");
+    		}
+    	}
+
+    	get db() {
+    		throw new Error("<Add>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set db(value) {
+    		throw new Error("<Add>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
     /* src/App.svelte generated by Svelte v3.32.0 */
     const file$4 = "src/App.svelte";
 
-    // (27:6) <Route path="edit">
+    // (26:6) <Route path="add">
+    function create_default_slot_3(ctx) {
+    	let add;
+    	let current;
+
+    	add = new Add({
+    			props: { db: /*db*/ ctx[2] },
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(add.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(add, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const add_changes = {};
+    			if (dirty & /*db*/ 4) add_changes.db = /*db*/ ctx[2];
+    			add.$set(add_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(add.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(add.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(add, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_3.name,
+    		type: "slot",
+    		source: "(26:6) <Route path=\\\"add\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (28:6) <Route path="edit">
     function create_default_slot_2(ctx) {
     	let edit;
     	let current;
@@ -36382,14 +36836,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_2.name,
     		type: "slot",
-    		source: "(27:6) <Route path=\\\"edit\\\">",
+    		source: "(28:6) <Route path=\\\"edit\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (28:6) <Route path="/">
+    // (29:6) <Route path="/">
     function create_default_slot_1$1(ctx) {
     	let home;
     	let updating_idBook;
@@ -36446,14 +36900,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$1.name,
     		type: "slot",
-    		source: "(28:6) <Route path=\\\"/\\\">",
+    		source: "(29:6) <Route path=\\\"/\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (21:2) <Router url="{url}">
+    // (22:2) <Router url="{url}">
     function create_default_slot$1(ctx) {
     	let div;
     	let route0;
@@ -36466,7 +36920,11 @@ var app = (function () {
     	let current;
 
     	route0 = new Route({
-    			props: { path: "add", component: Delete },
+    			props: {
+    				path: "add",
+    				$$slots: { default: [create_default_slot_3] },
+    				$$scope: { ctx }
+    			},
     			$$inline: true
     		});
 
@@ -36503,7 +36961,7 @@ var app = (function () {
     			create_component(route2.$$.fragment);
     			t2 = space();
     			create_component(route3.$$.fragment);
-    			add_location(div, file$4, 22, 4, 693);
+    			add_location(div, file$4, 23, 4, 733);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -36517,6 +36975,13 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
+    			const route0_changes = {};
+
+    			if (dirty & /*$$scope, db*/ 260) {
+    				route0_changes.$$scope = { dirty, ctx };
+    			}
+
+    			route0.$set(route0_changes);
     			const route2_changes = {};
 
     			if (dirty & /*$$scope, db, idBook*/ 268) {
@@ -36560,14 +37025,14 @@ var app = (function () {
     		block,
     		id: create_default_slot$1.name,
     		type: "slot",
-    		source: "(21:2) <Router url=\\\"{url}\\\">",
+    		source: "(22:2) <Router url=\\\"{url}\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$9(ctx) {
+    function create_fragment$a(ctx) {
     	let link;
     	let t0;
     	let main;
@@ -36613,8 +37078,8 @@ var app = (function () {
     			create_component(router.$$.fragment);
     			attr_dev(link, "href", "https://fonts.googleapis.com/icon?family=Material+Icons");
     			attr_dev(link, "rel", "stylesheet");
-    			add_location(link, file$4, 16, 0, 432);
-    			add_location(main, file$4, 18, 0, 525);
+    			add_location(link, file$4, 17, 0, 472);
+    			add_location(main, file$4, 19, 0, 565);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -36670,7 +37135,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$9.name,
+    		id: create_fragment$a.name,
     		type: "component",
     		source: "",
     		ctx
@@ -36679,7 +37144,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$9($$self, $$props, $$invalidate) {
+    function instance$a($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("App", slots, []);
     	let books = [];
@@ -36722,6 +37187,7 @@ var app = (function () {
     		Home,
     		Delete,
     		Edit,
+    		Add,
     		books,
     		book,
     		db,
@@ -36755,13 +37221,13 @@ var app = (function () {
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$9, create_fragment$9, safe_not_equal, { url: 0 });
+    		init(this, options, instance$a, create_fragment$a, safe_not_equal, { url: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "App",
     			options,
-    			id: create_fragment$9.name
+    			id: create_fragment$a.name
     		});
     	}
 

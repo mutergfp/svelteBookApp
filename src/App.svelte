@@ -7,6 +7,7 @@
   import Home from "./routes/Home.svelte"
   import Delete from "./routes/Delete.svelte"
   import Edit from "./routes/Edit.svelte"
+  import Add from "./routes/Add.svelte"
   let books = []
   let book
   let db = null
@@ -22,7 +23,7 @@
     <!-- On bind les routes aux composants-->
     <div>
       <!-- <Route path="edit" component="{Edit}" /> -->
-      <Route path="add" component="{Delete}" />
+      <Route path="add"><Add {db}/></Route>
       <Route path="delete/:id" component="{Delete}" />
       <Route path="edit"><Edit {db} {idBook}/></Route>
       <Route path="/"><Home {books} bind:idBook={idBook}/></Route>

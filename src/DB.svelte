@@ -43,4 +43,28 @@
     const dbData = await db.get(id)
     return dbData
  }
+
+ export async function edit(book) {
+   if(!db){
+     console.log('no bdd')
+     return
+   }
+   await db.put(book).then(function(response){
+     console.log('response', response)
+   }).catch(function (error) {
+     console.log('err', err)
+   })
+ }
+
+ export async function add(book){
+  if(!db){
+     console.log('no bdd')
+     return
+   }
+   db.post(book).then(function(response){
+     console.log('response', response)
+   }).catch(function (error) {
+     console.log('err', err)
+   })
+ }
 </script>

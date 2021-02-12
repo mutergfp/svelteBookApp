@@ -1,5 +1,5 @@
 <script>
-    import { Router, Link, Route } from "svelte-routing";
+    import { Link } from "svelte-routing";
     import "@polymer/paper-card";
     import Header from "../component/header.svelte"
     export let books = [];
