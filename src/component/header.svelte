@@ -8,10 +8,13 @@
     function add(){
         navigate('add')
     }
+    function returnHome(){
+        window.location.href = "/"
+    }
 </script>
 
 <mwc-top-app-bar>
-    <mwc-icon-button icon="menu" slot="navigationIcon"></mwc-icon-button>
+    <mwc-icon-button icon="home" slot="navigationIcon" on:click={returnHome}></mwc-icon-button>
     <div slot="title">{title}</div>
     <mwc-icon-button icon="add" on:click={add}></mwc-icon-button>
     <div><!-- content --></div>

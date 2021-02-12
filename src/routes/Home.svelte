@@ -43,7 +43,7 @@
         </div>
         <div class="card-action">
           <nav>
-            <Link to="delete/{book._id}"><mwc-icon-button icon="delete"></mwc-icon-button></Link>
+            <Link to="delete/"><mwc-icon-button icon="delete" onclick="{() => {idBook = book._id}}"></mwc-icon-button></Link>
             <Link to="edit/"><mwc-icon-button icon="edit" onclick="{() => {idBook = book._id}}"></mwc-icon-button></Link>
           </nav>
         </div>

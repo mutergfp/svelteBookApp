@@ -44,8 +44,18 @@
     return dbData
  }
 
- export async function edit(book) {
+ export async function delete_book(id){
    if(!db){
+     console.log('no bdd')
+     return
+   }
+   db.get(id).then(function (doc) {
+      return db.remove(doc);
+   });
+  }
+
+  export async function edit(book) {
+    if(!db){
      console.log('no bdd')
      return
    }
@@ -66,5 +76,6 @@
    }).catch(function (error) {
      console.log('err', err)
    })
+   
  }
 </script>
