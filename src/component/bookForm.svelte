@@ -5,7 +5,6 @@ import "@polymer/paper-card";
 import "@material/mwc-button";
 import "@material/mwc-icon-button";
 import "@material/mwc-top-app-bar";
-import { resolve } from 'path';
 //export let id;
 export let book;
 export let db
@@ -17,7 +16,7 @@ $: if(book){
 
 onMount(
     () => {
-        if(!book){
+        if(book == {}){
             book = {
                 "author": "",
                 "url": "",
@@ -71,5 +70,5 @@ async function dataImage(){
     <input bind:value={book.price} placeholder="Prix du livre" />
     <input bind:value={book.url} placeholder="URL Amazon du livre" />
     <input bind:files accept="image/png, image/jpeg" type="file" placeholder="Prix du livre" />
-    <button type="button" on:click={saveData} />
+    <button type="button" on:click={saveData} >Créer un livre</button>
 </form>

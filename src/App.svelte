@@ -9,7 +9,6 @@
   import Edit from "./routes/Edit.svelte"
   import Add from "./routes/Add.svelte"
   let books = []
-  let book
   let db = null
   let idBook= null
   export let url = ""
@@ -28,5 +27,5 @@
       <Route path="edit"><Edit {db} {idBook}/></Route>
       <Route path="/"><Home {books} bind:idBook={idBook}/></Route>
     </div>
-</Router>
+  </Router>
 </main>

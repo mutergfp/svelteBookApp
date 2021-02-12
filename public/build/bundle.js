@@ -35372,13 +35372,11 @@ var app = (function () {
 
     function create_fragment$4(ctx) {
     	let mwc_top_app_bar;
-    	let mwc_icon_button0;
+    	let mwc_icon_button;
     	let t0;
     	let div0;
     	let t1;
     	let t2;
-    	let mwc_icon_button1;
-    	let t3;
     	let div1;
     	let mounted;
     	let dispose;
@@ -35386,22 +35384,18 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			mwc_top_app_bar = element("mwc-top-app-bar");
-    			mwc_icon_button0 = element("mwc-icon-button");
+    			mwc_icon_button = element("mwc-icon-button");
     			t0 = space();
     			div0 = element("div");
     			t1 = text(/*title*/ ctx[0]);
     			t2 = space();
-    			mwc_icon_button1 = element("mwc-icon-button");
-    			t3 = space();
     			div1 = element("div");
-    			set_custom_element_data(mwc_icon_button0, "icon", "home");
-    			set_custom_element_data(mwc_icon_button0, "slot", "navigationIcon");
-    			add_location(mwc_icon_button0, file$1, 16, 4, 356);
+    			set_custom_element_data(mwc_icon_button, "icon", "home");
+    			set_custom_element_data(mwc_icon_button, "slot", "navigationIcon");
+    			add_location(mwc_icon_button, file$1, 16, 4, 356);
     			attr_dev(div0, "slot", "title");
     			add_location(div0, file$1, 17, 4, 452);
-    			set_custom_element_data(mwc_icon_button1, "icon", "add");
-    			add_location(mwc_icon_button1, file$1, 18, 4, 488);
-    			add_location(div1, file$1, 19, 4, 554);
+    			add_location(div1, file$1, 19, 4, 489);
     			add_location(mwc_top_app_bar, file$1, 15, 0, 334);
     		},
     		l: function claim(nodes) {
@@ -35409,21 +35403,15 @@ var app = (function () {
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, mwc_top_app_bar, anchor);
-    			append_dev(mwc_top_app_bar, mwc_icon_button0);
+    			append_dev(mwc_top_app_bar, mwc_icon_button);
     			append_dev(mwc_top_app_bar, t0);
     			append_dev(mwc_top_app_bar, div0);
     			append_dev(div0, t1);
     			append_dev(mwc_top_app_bar, t2);
-    			append_dev(mwc_top_app_bar, mwc_icon_button1);
-    			append_dev(mwc_top_app_bar, t3);
     			append_dev(mwc_top_app_bar, div1);
 
     			if (!mounted) {
-    				dispose = [
-    					listen_dev(mwc_icon_button0, "click", returnHome, false, false, false),
-    					listen_dev(mwc_icon_button1, "click", /*add*/ ctx[1], false, false, false)
-    				];
-
+    				dispose = listen_dev(mwc_icon_button, "click", returnHome, false, false, false);
     				mounted = true;
     			}
     		},
@@ -35435,7 +35423,7 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(mwc_top_app_bar);
     			mounted = false;
-    			run_all(dispose);
+    			dispose();
     		}
     	};
 
@@ -35483,7 +35471,7 @@ var app = (function () {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [title, add];
+    	return [title];
     }
 
     class Header extends SvelteComponentDev {
@@ -35519,7 +35507,37 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (46:12) <Link to="delete/">
+    // (35:0) <Link to="add/">
+    function create_default_slot_2(ctx) {
+    	let mwc_icon_button;
+
+    	const block = {
+    		c: function create() {
+    			mwc_icon_button = element("mwc-icon-button");
+    			set_custom_element_data(mwc_icon_button, "icon", "add");
+    			set_custom_element_data(mwc_icon_button, "class", "svelte-16zk576");
+    			add_location(mwc_icon_button, file$2, 34, 16, 629);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, mwc_icon_button, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(mwc_icon_button);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_2.name,
+    		type: "slot",
+    		source: "(35:0) <Link to=\\\"add/\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (47:12) <Link to="delete/">
     function create_default_slot_1(ctx) {
     	let mwc_icon_button;
     	let mwc_icon_button_onclick_value;
@@ -35534,7 +35552,7 @@ var app = (function () {
     			set_custom_element_data(mwc_icon_button, "icon", "delete");
     			set_custom_element_data(mwc_icon_button, "onclick", mwc_icon_button_onclick_value = func);
     			set_custom_element_data(mwc_icon_button, "class", "svelte-16zk576");
-    			add_location(mwc_icon_button, file$2, 45, 31, 1034);
+    			add_location(mwc_icon_button, file$2, 46, 31, 1104);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, mwc_icon_button, anchor);
@@ -35555,14 +35573,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(46:12) <Link to=\\\"delete/\\\">",
+    		source: "(47:12) <Link to=\\\"delete/\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (47:12) <Link to="edit/">
+    // (48:12) <Link to="edit/">
     function create_default_slot(ctx) {
     	let mwc_icon_button;
     	let mwc_icon_button_onclick_value;
@@ -35577,7 +35595,7 @@ var app = (function () {
     			set_custom_element_data(mwc_icon_button, "icon", "edit");
     			set_custom_element_data(mwc_icon_button, "onclick", mwc_icon_button_onclick_value = func_1);
     			set_custom_element_data(mwc_icon_button, "class", "svelte-16zk576");
-    			add_location(mwc_icon_button, file$2, 46, 29, 1158);
+    			add_location(mwc_icon_button, file$2, 47, 29, 1228);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, mwc_icon_button, anchor);
@@ -35598,14 +35616,14 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(47:12) <Link to=\\\"edit/\\\">",
+    		source: "(48:12) <Link to=\\\"edit/\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (35:0) {#each books as book}
+    // (36:0) {#each books as book}
     function create_each_block(ctx) {
     	let paper_card;
     	let div3;
@@ -35672,18 +35690,18 @@ var app = (function () {
     			if (img.src !== (img_src_value = "data:image/jpeg;base64, " + /*book*/ ctx[5].img.data)) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", img_alt_value = /*book*/ ctx[5].title);
     			attr_dev(img, "title", img_title_value = /*book*/ ctx[5].title);
-    			add_location(img, file$2, 38, 12, 727);
+    			add_location(img, file$2, 39, 12, 797);
     			attr_dev(div0, "class", "card-content");
-    			add_location(div0, file$2, 39, 12, 832);
-    			add_location(div1, file$2, 37, 8, 709);
-    			add_location(nav, file$2, 44, 10, 997);
+    			add_location(div0, file$2, 40, 12, 902);
+    			add_location(div1, file$2, 38, 8, 779);
+    			add_location(nav, file$2, 45, 10, 1067);
     			attr_dev(div2, "class", "card-action");
-    			add_location(div2, file$2, 43, 8, 961);
+    			add_location(div2, file$2, 44, 8, 1031);
     			attr_dev(div3, "class", "card-info svelte-16zk576");
-    			add_location(div3, file$2, 36, 4, 677);
+    			add_location(div3, file$2, 37, 4, 747);
     			set_custom_element_data(paper_card, "heading", paper_card_heading_value = /*book*/ ctx[5].title);
     			set_custom_element_data(paper_card, "class", "svelte-16zk576");
-    			add_location(paper_card, file$2, 35, 4, 639);
+    			add_location(paper_card, file$2, 36, 4, 709);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, paper_card, anchor);
@@ -35761,7 +35779,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(35:0) {#each books as book}",
+    		source: "(36:0) {#each books as book}",
     		ctx
     	});
 
@@ -35770,12 +35788,23 @@ var app = (function () {
 
     function create_fragment$5(ctx) {
     	let header;
-    	let t;
+    	let t0;
+    	let link;
+    	let t1;
     	let each_1_anchor;
     	let current;
 
     	header = new Header({
     			props: { title: /*pageTitle*/ ctx[2] },
+    			$$inline: true
+    		});
+
+    	link = new Link({
+    			props: {
+    				to: "add/",
+    				$$slots: { default: [create_default_slot_2] },
+    				$$scope: { ctx }
+    			},
     			$$inline: true
     		});
 
@@ -35794,7 +35823,9 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			create_component(header.$$.fragment);
-    			t = space();
+    			t0 = space();
+    			create_component(link.$$.fragment);
+    			t1 = space();
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
@@ -35807,7 +35838,9 @@ var app = (function () {
     		},
     		m: function mount(target, anchor) {
     			mount_component(header, target, anchor);
-    			insert_dev(target, t, anchor);
+    			insert_dev(target, t0, anchor);
+    			mount_component(link, target, anchor);
+    			insert_dev(target, t1, anchor);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(target, anchor);
@@ -35817,6 +35850,14 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
+    			const link_changes = {};
+
+    			if (dirty & /*$$scope*/ 256) {
+    				link_changes.$$scope = { dirty, ctx };
+    			}
+
+    			link.$set(link_changes);
+
     			if (dirty & /*books, idBook*/ 3) {
     				each_value = /*books*/ ctx[1];
     				validate_each_argument(each_value);
@@ -35848,6 +35889,7 @@ var app = (function () {
     		i: function intro(local) {
     			if (current) return;
     			transition_in(header.$$.fragment, local);
+    			transition_in(link.$$.fragment, local);
 
     			for (let i = 0; i < each_value.length; i += 1) {
     				transition_in(each_blocks[i]);
@@ -35857,6 +35899,7 @@ var app = (function () {
     		},
     		o: function outro(local) {
     			transition_out(header.$$.fragment, local);
+    			transition_out(link.$$.fragment, local);
     			each_blocks = each_blocks.filter(Boolean);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
@@ -35867,7 +35910,9 @@ var app = (function () {
     		},
     		d: function destroy(detaching) {
     			destroy_component(header, detaching);
-    			if (detaching) detach_dev(t);
+    			if (detaching) detach_dev(t0);
+    			destroy_component(link, detaching);
+    			if (detaching) detach_dev(t1);
     			destroy_each(each_blocks, detaching);
     			if (detaching) detach_dev(each_1_anchor);
     		}
@@ -36122,95 +36167,6 @@ var app = (function () {
     	}
     }
 
-    // Copyright Joyent, Inc. and other Node contributors.
-    //
-    // Permission is hereby granted, free of charge, to any person obtaining a
-    // copy of this software and associated documentation files (the
-    // "Software"), to deal in the Software without restriction, including
-    // without limitation the rights to use, copy, modify, merge, publish,
-    // distribute, sublicense, and/or sell copies of the Software, and to permit
-    // persons to whom the Software is furnished to do so, subject to the
-    // following conditions:
-    //
-    // The above copyright notice and this permission notice shall be included
-    // in all copies or substantial portions of the Software.
-    //
-    // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-    // OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-    // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-    // NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-    // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-    // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-    // USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-    // resolves . and .. elements in a path array with directory names there
-    // must be no slashes, empty elements, or device names (c:\) in the array
-    // (so also no leading and trailing slashes - it does not distinguish
-    // relative and absolute paths)
-    function normalizeArray(parts, allowAboveRoot) {
-      // if the path tries to go above the root, `up` ends up > 0
-      var up = 0;
-      for (var i = parts.length - 1; i >= 0; i--) {
-        var last = parts[i];
-        if (last === '.') {
-          parts.splice(i, 1);
-        } else if (last === '..') {
-          parts.splice(i, 1);
-          up++;
-        } else if (up) {
-          parts.splice(i, 1);
-          up--;
-        }
-      }
-
-      // if the path is allowed to go above the root, restore leading ..s
-      if (allowAboveRoot) {
-        for (; up--; up) {
-          parts.unshift('..');
-        }
-      }
-
-      return parts;
-    }
-
-    // path.resolve([from ...], to)
-    // posix version
-    function resolve$2() {
-      var resolvedPath = '',
-          resolvedAbsolute = false;
-
-      for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
-        var path = (i >= 0) ? arguments[i] : '/';
-
-        // Skip empty and invalid entries
-        if (typeof path !== 'string') {
-          throw new TypeError('Arguments to path.resolve must be strings');
-        } else if (!path) {
-          continue;
-        }
-
-        resolvedPath = path + '/' + resolvedPath;
-        resolvedAbsolute = path.charAt(0) === '/';
-      }
-
-      // At this point the path should be resolved to a full absolute path, but
-      // handle relative paths to be safe (might happen when process.cwd() fails)
-
-      // Normalize the path
-      resolvedPath = normalizeArray(filter$1(resolvedPath.split('/'), function(p) {
-        return !!p;
-      }), !resolvedAbsolute).join('/');
-
-      return ((resolvedAbsolute ? '/' : '') + resolvedPath) || '.';
-    }function filter$1 (xs, f) {
-        if (xs.filter) return xs.filter(f);
-        var res = [];
-        for (var i = 0; i < xs.length; i++) {
-            if (f(xs[i], i, xs)) res.push(xs[i]);
-        }
-        return res;
-    }
-
     /* src/component/bookForm.svelte generated by Svelte v3.32.0 */
 
     const { console: console_1$3 } = globals;
@@ -36250,24 +36206,25 @@ var app = (function () {
     			input4 = element("input");
     			t5 = space();
     			button = element("button");
+    			button.textContent = "Créer un livre";
     			attr_dev(link, "href", "https://fonts.googleapis.com/icon?family=Material+Icons");
     			attr_dev(link, "rel", "stylesheet");
-    			add_location(link, file$4, 65, 0, 1343);
+    			add_location(link, file$4, 64, 0, 1316);
     			attr_dev(input0, "placeholder", "Titre");
-    			add_location(input0, file$4, 68, 4, 1442);
+    			add_location(input0, file$4, 67, 4, 1415);
     			attr_dev(input1, "placeholder", "Auteur");
-    			add_location(input1, file$4, 69, 4, 1500);
+    			add_location(input1, file$4, 68, 4, 1473);
     			attr_dev(input2, "placeholder", "Prix du livre");
-    			add_location(input2, file$4, 70, 4, 1560);
+    			add_location(input2, file$4, 69, 4, 1533);
     			attr_dev(input3, "placeholder", "URL Amazon du livre");
-    			add_location(input3, file$4, 71, 4, 1626);
+    			add_location(input3, file$4, 70, 4, 1599);
     			attr_dev(input4, "accept", "image/png, image/jpeg");
     			attr_dev(input4, "type", "file");
     			attr_dev(input4, "placeholder", "Prix du livre");
-    			add_location(input4, file$4, 72, 4, 1696);
+    			add_location(input4, file$4, 71, 4, 1669);
     			attr_dev(button, "type", "button");
-    			add_location(button, file$4, 73, 4, 1792);
-    			add_location(form, file$4, 67, 0, 1431);
+    			add_location(button, file$4, 72, 4, 1765);
+    			add_location(form, file$4, 66, 0, 1404);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -36352,7 +36309,7 @@ var app = (function () {
     	let files;
 
     	onMount(() => {
-    		if (!book) {
+    		if (book == {}) {
     			$$invalidate(0, book = {
     				"author": "",
     				"url": "",
@@ -36433,7 +36390,6 @@ var app = (function () {
     	$$self.$capture_state = () => ({
     		onMount,
     		navigate,
-    		resolve: resolve$2,
     		book,
     		db,
     		files,
@@ -36749,7 +36705,7 @@ var app = (function () {
     		});
 
     	bookform = new BookForm({
-    			props: { db: /*db*/ ctx[0] },
+    			props: { db: /*db*/ ctx[0], book: /*book*/ ctx[2] },
     			$$inline: true
     		});
 
@@ -36807,6 +36763,7 @@ var app = (function () {
     	validate_slots("Add", slots, []);
     	let pageTitle = "BookAPP - Ajout";
     	let { db } = $$props;
+    	let book = {};
     	const writable_props = ["db"];
 
     	Object.keys($$props).forEach(key => {
@@ -36817,18 +36774,19 @@ var app = (function () {
     		if ("db" in $$props) $$invalidate(0, db = $$props.db);
     	};
 
-    	$$self.$capture_state = () => ({ Header, BookForm, pageTitle, db });
+    	$$self.$capture_state = () => ({ Header, BookForm, pageTitle, db, book });
 
     	$$self.$inject_state = $$props => {
     		if ("pageTitle" in $$props) $$invalidate(1, pageTitle = $$props.pageTitle);
     		if ("db" in $$props) $$invalidate(0, db = $$props.db);
+    		if ("book" in $$props) $$invalidate(2, book = $$props.book);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [db, pageTitle];
+    	return [db, pageTitle, book];
     }
 
     class Add extends SvelteComponentDev {
@@ -36863,7 +36821,7 @@ var app = (function () {
     /* src/App.svelte generated by Svelte v3.32.0 */
     const file$5 = "src/App.svelte";
 
-    // (26:6) <Route path="add">
+    // (25:6) <Route path="add">
     function create_default_slot_4(ctx) {
     	let add;
     	let current;
@@ -36904,14 +36862,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_4.name,
     		type: "slot",
-    		source: "(26:6) <Route path=\\\"add\\\">",
+    		source: "(25:6) <Route path=\\\"add\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (27:6) <Route path="delete">
+    // (26:6) <Route path="delete">
     function create_default_slot_3(ctx) {
     	let delete_1;
     	let current;
@@ -36956,15 +36914,15 @@ var app = (function () {
     		block,
     		id: create_default_slot_3.name,
     		type: "slot",
-    		source: "(27:6) <Route path=\\\"delete\\\">",
+    		source: "(26:6) <Route path=\\\"delete\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (28:6) <Route path="edit">
-    function create_default_slot_2(ctx) {
+    // (27:6) <Route path="edit">
+    function create_default_slot_2$1(ctx) {
     	let edit;
     	let current;
 
@@ -37006,16 +36964,16 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_2.name,
+    		id: create_default_slot_2$1.name,
     		type: "slot",
-    		source: "(28:6) <Route path=\\\"edit\\\">",
+    		source: "(27:6) <Route path=\\\"edit\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (29:6) <Route path="/">
+    // (28:6) <Route path="/">
     function create_default_slot_1$1(ctx) {
     	let home;
     	let updating_idBook;
@@ -37072,14 +37030,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1$1.name,
     		type: "slot",
-    		source: "(29:6) <Route path=\\\"/\\\">",
+    		source: "(28:6) <Route path=\\\"/\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (22:2) <Router url="{url}">
+    // (21:2) <Router url="{url}">
     function create_default_slot$1(ctx) {
     	let div;
     	let route0;
@@ -37112,7 +37070,7 @@ var app = (function () {
     	route2 = new Route({
     			props: {
     				path: "edit",
-    				$$slots: { default: [create_default_slot_2] },
+    				$$slots: { default: [create_default_slot_2$1] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -37137,7 +37095,7 @@ var app = (function () {
     			create_component(route2.$$.fragment);
     			t2 = space();
     			create_component(route3.$$.fragment);
-    			add_location(div, file$5, 23, 4, 733);
+    			add_location(div, file$5, 22, 4, 722);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -37153,28 +37111,28 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const route0_changes = {};
 
-    			if (dirty & /*$$scope, db*/ 260) {
+    			if (dirty & /*$$scope, db*/ 132) {
     				route0_changes.$$scope = { dirty, ctx };
     			}
 
     			route0.$set(route0_changes);
     			const route1_changes = {};
 
-    			if (dirty & /*$$scope, db, idBook*/ 268) {
+    			if (dirty & /*$$scope, db, idBook*/ 140) {
     				route1_changes.$$scope = { dirty, ctx };
     			}
 
     			route1.$set(route1_changes);
     			const route2_changes = {};
 
-    			if (dirty & /*$$scope, db, idBook*/ 268) {
+    			if (dirty & /*$$scope, db, idBook*/ 140) {
     				route2_changes.$$scope = { dirty, ctx };
     			}
 
     			route2.$set(route2_changes);
     			const route3_changes = {};
 
-    			if (dirty & /*$$scope, books, idBook*/ 266) {
+    			if (dirty & /*$$scope, books, idBook*/ 138) {
     				route3_changes.$$scope = { dirty, ctx };
     			}
 
@@ -37208,7 +37166,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$1.name,
     		type: "slot",
-    		source: "(22:2) <Router url=\\\"{url}\\\">",
+    		source: "(21:2) <Router url=\\\"{url}\\\">",
     		ctx
     	});
 
@@ -37261,8 +37219,8 @@ var app = (function () {
     			create_component(router.$$.fragment);
     			attr_dev(link, "href", "https://fonts.googleapis.com/icon?family=Material+Icons");
     			attr_dev(link, "rel", "stylesheet");
-    			add_location(link, file$5, 17, 0, 472);
-    			add_location(main, file$5, 19, 0, 565);
+    			add_location(link, file$5, 16, 0, 461);
+    			add_location(main, file$5, 18, 0, 554);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -37289,7 +37247,7 @@ var app = (function () {
     			const router_changes = {};
     			if (dirty & /*url*/ 1) router_changes.url = /*url*/ ctx[0];
 
-    			if (dirty & /*$$scope, books, idBook, db*/ 270) {
+    			if (dirty & /*$$scope, books, idBook, db*/ 142) {
     				router_changes.$$scope = { dirty, ctx };
     			}
 
@@ -37331,7 +37289,6 @@ var app = (function () {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("App", slots, []);
     	let books = [];
-    	let book;
     	let db = null;
     	let idBook = null;
     	let { url = "" } = $$props;
@@ -37372,7 +37329,6 @@ var app = (function () {
     		Edit,
     		Add,
     		books,
-    		book,
     		db,
     		idBook,
     		url
@@ -37380,7 +37336,6 @@ var app = (function () {
 
     	$$self.$inject_state = $$props => {
     		if ("books" in $$props) $$invalidate(1, books = $$props.books);
-    		if ("book" in $$props) book = $$props.book;
     		if ("db" in $$props) $$invalidate(2, db = $$props.db);
     		if ("idBook" in $$props) $$invalidate(3, idBook = $$props.idBook);
     		if ("url" in $$props) $$invalidate(0, url = $$props.url);

@@ -32,6 +32,7 @@
 </style>
 
 <Header title={pageTitle} ></Header>
+<Link to="add/"><mwc-icon-button icon="add"></mwc-icon-button></Link>
 {#each books as book}
     <paper-card heading={book.title}>
     <div class="card-info">
