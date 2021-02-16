@@ -36187,6 +36187,7 @@ var app = (function () {
     	let input4;
     	let t5;
     	let button;
+    	let t6;
     	let mounted;
     	let dispose;
 
@@ -36206,25 +36207,25 @@ var app = (function () {
     			input4 = element("input");
     			t5 = space();
     			button = element("button");
-    			button.textContent = "Créer un livre";
+    			t6 = text(/*buttonTitle*/ ctx[1]);
     			attr_dev(link, "href", "https://fonts.googleapis.com/icon?family=Material+Icons");
     			attr_dev(link, "rel", "stylesheet");
-    			add_location(link, file$4, 64, 0, 1316);
+    			add_location(link, file$4, 64, 0, 1281);
     			attr_dev(input0, "placeholder", "Titre");
-    			add_location(input0, file$4, 67, 4, 1415);
+    			add_location(input0, file$4, 67, 4, 1380);
     			attr_dev(input1, "placeholder", "Auteur");
-    			add_location(input1, file$4, 68, 4, 1473);
+    			add_location(input1, file$4, 68, 4, 1438);
     			attr_dev(input2, "placeholder", "Prix du livre");
-    			add_location(input2, file$4, 69, 4, 1533);
+    			add_location(input2, file$4, 69, 4, 1498);
     			attr_dev(input3, "placeholder", "URL Amazon du livre");
-    			add_location(input3, file$4, 70, 4, 1599);
+    			add_location(input3, file$4, 70, 4, 1564);
     			attr_dev(input4, "accept", "image/png, image/jpeg");
     			attr_dev(input4, "type", "file");
     			attr_dev(input4, "placeholder", "Prix du livre");
-    			add_location(input4, file$4, 71, 4, 1669);
+    			add_location(input4, file$4, 71, 4, 1634);
     			attr_dev(button, "type", "button");
-    			add_location(button, file$4, 72, 4, 1765);
-    			add_location(form, file$4, 66, 0, 1404);
+    			add_location(button, file$4, 72, 4, 1730);
+    			add_location(form, file$4, 66, 0, 1369);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -36248,15 +36249,16 @@ var app = (function () {
     			append_dev(form, input4);
     			append_dev(form, t5);
     			append_dev(form, button);
+    			append_dev(button, t6);
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(input0, "input", /*input0_input_handler*/ ctx[4]),
-    					listen_dev(input1, "input", /*input1_input_handler*/ ctx[5]),
-    					listen_dev(input2, "input", /*input2_input_handler*/ ctx[6]),
-    					listen_dev(input3, "input", /*input3_input_handler*/ ctx[7]),
-    					listen_dev(input4, "change", /*input4_change_handler*/ ctx[8]),
-    					listen_dev(button, "click", /*saveData*/ ctx[2], false, false, false)
+    					listen_dev(input0, "input", /*input0_input_handler*/ ctx[5]),
+    					listen_dev(input1, "input", /*input1_input_handler*/ ctx[6]),
+    					listen_dev(input2, "input", /*input2_input_handler*/ ctx[7]),
+    					listen_dev(input3, "input", /*input3_input_handler*/ ctx[8]),
+    					listen_dev(input4, "change", /*input4_change_handler*/ ctx[9]),
+    					listen_dev(button, "click", /*saveData*/ ctx[3], false, false, false)
     				];
 
     				mounted = true;
@@ -36278,6 +36280,8 @@ var app = (function () {
     			if (dirty & /*book*/ 1 && input3.value !== /*book*/ ctx[0].url) {
     				set_input_value(input3, /*book*/ ctx[0].url);
     			}
+
+    			if (dirty & /*buttonTitle*/ 2) set_data_dev(t6, /*buttonTitle*/ ctx[1]);
     		},
     		i: noop,
     		o: noop,
@@ -36306,6 +36310,7 @@ var app = (function () {
     	validate_slots("BookForm", slots, []);
     	let { book } = $$props;
     	let { db } = $$props;
+    	let { buttonTitle } = $$props;
     	let files;
 
     	onMount(() => {
@@ -36314,27 +36319,26 @@ var app = (function () {
     				"author": "",
     				"url": "",
     				"price": "",
-    				"title": "",
-    				"img": {}
+    				"title": ""
     			});
     		}
     	});
 
     	async function saveData() {
-    		if (book.img != {}) {
+    		if (files) {
     			$$invalidate(0, book.img.content_type = files[0].type, book);
     			$$invalidate(0, book.img.filename = files[0].name, book);
     			$$invalidate(0, book.img.path = "images/" + files[0].name, book);
     			await dataImage();
-
-    			if (book._id) {
-    				db.edit(book);
-    			} else {
-    				db.add(book);
-    			}
-
-    			navigate("/");
     		}
+
+    		if (book._id) {
+    			db.edit(book);
+    		} else {
+    			db.add(book);
+    		}
+
+    		navigate("/");
     	}
 
     	async function dataImage() {
@@ -36351,7 +36355,7 @@ var app = (function () {
     			});
     	}
 
-    	const writable_props = ["book", "db"];
+    	const writable_props = ["book", "db", "buttonTitle"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$3.warn(`<BookForm> was created with unknown prop '${key}'`);
@@ -36379,12 +36383,13 @@ var app = (function () {
 
     	function input4_change_handler() {
     		files = this.files;
-    		$$invalidate(1, files);
+    		$$invalidate(2, files);
     	}
 
     	$$self.$$set = $$props => {
     		if ("book" in $$props) $$invalidate(0, book = $$props.book);
-    		if ("db" in $$props) $$invalidate(3, db = $$props.db);
+    		if ("db" in $$props) $$invalidate(4, db = $$props.db);
+    		if ("buttonTitle" in $$props) $$invalidate(1, buttonTitle = $$props.buttonTitle);
     	};
 
     	$$self.$capture_state = () => ({
@@ -36392,6 +36397,7 @@ var app = (function () {
     		navigate,
     		book,
     		db,
+    		buttonTitle,
     		files,
     		saveData,
     		dataImage
@@ -36399,8 +36405,9 @@ var app = (function () {
 
     	$$self.$inject_state = $$props => {
     		if ("book" in $$props) $$invalidate(0, book = $$props.book);
-    		if ("db" in $$props) $$invalidate(3, db = $$props.db);
-    		if ("files" in $$props) $$invalidate(1, files = $$props.files);
+    		if ("db" in $$props) $$invalidate(4, db = $$props.db);
+    		if ("buttonTitle" in $$props) $$invalidate(1, buttonTitle = $$props.buttonTitle);
+    		if ("files" in $$props) $$invalidate(2, files = $$props.files);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -36417,6 +36424,7 @@ var app = (function () {
 
     	return [
     		book,
+    		buttonTitle,
     		files,
     		saveData,
     		db,
@@ -36431,7 +36439,7 @@ var app = (function () {
     class BookForm extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$7, create_fragment$7, safe_not_equal, { book: 0, db: 3 });
+    		init(this, options, instance$7, create_fragment$7, safe_not_equal, { book: 0, db: 4, buttonTitle: 1 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -36447,8 +36455,12 @@ var app = (function () {
     			console_1$3.warn("<BookForm> was created without expected prop 'book'");
     		}
 
-    		if (/*db*/ ctx[3] === undefined && !("db" in props)) {
+    		if (/*db*/ ctx[4] === undefined && !("db" in props)) {
     			console_1$3.warn("<BookForm> was created without expected prop 'db'");
+    		}
+
+    		if (/*buttonTitle*/ ctx[1] === undefined && !("buttonTitle" in props)) {
+    			console_1$3.warn("<BookForm> was created without expected prop 'buttonTitle'");
     		}
     	}
 
@@ -36467,17 +36479,29 @@ var app = (function () {
     	set db(value) {
     		throw new Error("<BookForm>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
+
+    	get buttonTitle() {
+    		throw new Error("<BookForm>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set buttonTitle(value) {
+    		throw new Error("<BookForm>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
     }
 
     /* src/routes/Edit.svelte generated by Svelte v3.32.0 */
 
-    // (21:0) {#if book != {}}
+    // (23:0) {#if book != {}}
     function create_if_block$1(ctx) {
     	let bookform;
     	let current;
 
     	bookform = new BookForm({
-    			props: { book: /*book*/ ctx[1], db: /*db*/ ctx[0] },
+    			props: {
+    				book: /*book*/ ctx[1],
+    				db: /*db*/ ctx[0],
+    				buttonTitle: /*buttonTitle*/ ctx[3]
+    			},
     			$$inline: true
     		});
 
@@ -36513,7 +36537,7 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(21:0) {#if book != {}}",
+    		source: "(23:0) {#if book != {}}",
     		ctx
     	});
 
@@ -36611,6 +36635,7 @@ var app = (function () {
     	let book = {};
     	let { db = null } = $$props;
     	let { idBook = null } = $$props;
+    	let buttonTitle = "Modifier un livre";
 
     	async function load() {
     		$$invalidate(1, book = await db.load_book(idBook));
@@ -36624,7 +36649,7 @@ var app = (function () {
 
     	$$self.$$set = $$props => {
     		if ("db" in $$props) $$invalidate(0, db = $$props.db);
-    		if ("idBook" in $$props) $$invalidate(3, idBook = $$props.idBook);
+    		if ("idBook" in $$props) $$invalidate(4, idBook = $$props.idBook);
     	};
 
     	$$self.$capture_state = () => ({
@@ -36634,6 +36659,7 @@ var app = (function () {
     		book,
     		db,
     		idBook,
+    		buttonTitle,
     		load
     	});
 
@@ -36641,7 +36667,8 @@ var app = (function () {
     		if ("pageTitle" in $$props) $$invalidate(2, pageTitle = $$props.pageTitle);
     		if ("book" in $$props) $$invalidate(1, book = $$props.book);
     		if ("db" in $$props) $$invalidate(0, db = $$props.db);
-    		if ("idBook" in $$props) $$invalidate(3, idBook = $$props.idBook);
+    		if ("idBook" in $$props) $$invalidate(4, idBook = $$props.idBook);
+    		if ("buttonTitle" in $$props) $$invalidate(3, buttonTitle = $$props.buttonTitle);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -36649,7 +36676,7 @@ var app = (function () {
     	}
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*db, idBook*/ 9) {
+    		if ($$self.$$.dirty & /*db, idBook*/ 17) {
     			 if (db) {
     				if (idBook) {
     					load();
@@ -36658,13 +36685,13 @@ var app = (function () {
     		}
     	};
 
-    	return [db, book, pageTitle, idBook];
+    	return [db, book, pageTitle, buttonTitle, idBook];
     }
 
     class Edit extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$8, create_fragment$8, safe_not_equal, { db: 0, idBook: 3 });
+    		init(this, options, instance$8, create_fragment$8, safe_not_equal, { db: 0, idBook: 4 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -36705,7 +36732,11 @@ var app = (function () {
     		});
 
     	bookform = new BookForm({
-    			props: { db: /*db*/ ctx[0], book: /*book*/ ctx[2] },
+    			props: {
+    				db: /*db*/ ctx[0],
+    				book: /*book*/ ctx[2],
+    				buttonTitle: /*buttonTitle*/ ctx[3]
+    			},
     			$$inline: true
     		});
 
@@ -36764,6 +36795,7 @@ var app = (function () {
     	let pageTitle = "BookAPP - Ajout";
     	let { db } = $$props;
     	let book = {};
+    	let buttonTitle = "Créer un livre";
     	const writable_props = ["db"];
 
     	Object.keys($$props).forEach(key => {
@@ -36774,19 +36806,27 @@ var app = (function () {
     		if ("db" in $$props) $$invalidate(0, db = $$props.db);
     	};
 
-    	$$self.$capture_state = () => ({ Header, BookForm, pageTitle, db, book });
+    	$$self.$capture_state = () => ({
+    		Header,
+    		BookForm,
+    		pageTitle,
+    		db,
+    		book,
+    		buttonTitle
+    	});
 
     	$$self.$inject_state = $$props => {
     		if ("pageTitle" in $$props) $$invalidate(1, pageTitle = $$props.pageTitle);
     		if ("db" in $$props) $$invalidate(0, db = $$props.db);
     		if ("book" in $$props) $$invalidate(2, book = $$props.book);
+    		if ("buttonTitle" in $$props) $$invalidate(3, buttonTitle = $$props.buttonTitle);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [db, pageTitle, book];
+    	return [db, pageTitle, book, buttonTitle];
     }
 
     class Add extends SvelteComponentDev {

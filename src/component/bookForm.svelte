@@ -8,6 +8,7 @@ import "@material/mwc-top-app-bar";
 //export let id;
 export let book;
 export let db
+export let buttonTitle;
 let files
 
 $: if(book){
@@ -22,25 +23,24 @@ onMount(
                 "url": "",
                 "price": "",
                 "title": "",
-                "img": {}
             }
         }
     }
 );
 
 async function saveData(){
-    if(book.img != {}){
+    if(files){
         book.img.content_type = files[0].type
         book.img.filename = files[0].name
         book.img.path = 'images/'+files[0].name
         await dataImage()
-        if(book._id){
-            db.edit(book)
-        }else{
-            db.add(book)
-        }
-        navigate('/')
     }
+    if(book._id){
+        db.edit(book)
+    }else{
+        db.add(book)
+    }
+    navigate('/')
 }
 
 async function dataImage(){
@@ -70,5 +70,5 @@ async function dataImage(){
     <input bind:value={book.price} placeholder="Prix du livre" />
     <input bind:value={book.url} placeholder="URL Amazon du livre" />
     <input bind:files accept="image/png, image/jpeg" type="file" placeholder="Prix du livre" />
-    <button type="button" on:click={saveData} >Créer un livre</button>
+    <button type="button" on:click={saveData} >{buttonTitle}</button>
 </form>

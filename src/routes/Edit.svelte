@@ -5,6 +5,8 @@
     let book = {}
     export let db = null
     export let idBook = null
+    let buttonTitle = "Modifier un livre"
+
 
     $: if(db){
         if(idBook){
@@ -19,7 +21,7 @@
 
 <Header title={pageTitle} ></Header>
 {#if book != {}}
-    <BookForm {book} {db}/>
+    <BookForm {book} {db} {buttonTitle}/>
 {/if}
 
 
